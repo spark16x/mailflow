@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import { addMinutes, addHours, addDays, addWeeks, addMonths } from 'date-fns';
+import { addSeconds, addMinutes, addHours, addDays, addWeeks, addMonths } from 'date-fns';
 import { useSettings } from './SettingsContext';
 
 export interface EmailDraft {
@@ -109,6 +109,7 @@ export const SchedulerProvider = ({ children }: { children: ReactNode }) => {
     const interval = task.repeatInterval;
 
     switch (task.repeatUnit) {
+      case 'second': return addSeconds(currentDate, interval).getTime();
       case 'minute': return addMinutes(currentDate, interval).getTime();
       case 'hour': return addHours(currentDate, interval).getTime();
       case 'day': return addDays(currentDate, interval).getTime();
@@ -177,7 +178,7 @@ export const SchedulerProvider = ({ children }: { children: ReactNode }) => {
       if (now >= activeTask.nextRunTime) {
         executeTask(activeTask);
       }
-    }, 10000); // Check every 10 seconds
+    }, 1000); // Check every second
 
     return () => clearInterval(intervalId);
   }, [activeTask, isConnected, executeTask]);
