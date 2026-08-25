@@ -224,6 +224,7 @@ export default function ComposePage() {
                     onChange={handleChange}
                     className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
                   >
+                    <option value="second">Seconds</option>
                     <option value="minute">Minutes</option>
                     <option value="hour">Hours</option>
                     <option value="day">Days</option>
