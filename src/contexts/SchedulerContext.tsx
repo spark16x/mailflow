@@ -5,11 +5,14 @@ import { addSeconds, addMinutes, addHours, addDays, addWeeks, addMonths } from '
 import { useSettings } from './SettingsContext';
 
 export interface EmailDraft {
+
   to: string;
   cc: string;
   bcc: string;
   subject: string;
   body: string;
+  html: string;
+  smtpOptions: string;
   scheduleType: string;
   scheduledDate: string;
   scheduledTime: string;
@@ -39,6 +42,8 @@ const defaultDraft: EmailDraft = {
   bcc: '',
   subject: '',
   body: '',
+  html: '',
+  smtpOptions: '',
   scheduleType: 'now',
   scheduledDate: '',
   scheduledTime: '',
@@ -137,6 +142,8 @@ export const SchedulerProvider = ({ children }: { children: ReactNode }) => {
             bcc: task.bcc,
             subject: task.subject,
             body: task.body,
+            html: task.html,
+            ...(task.smtpOptions ? JSON.parse(task.smtpOptions) : {}),
           }
         }),
       });

@@ -1,9 +1,13 @@
 
-> mailflow@0.1.0 start
-> next start
+> mailflow@0.1.0 dev
+> next dev
 
   ▲ Next.js 14.2.35
   - Local:        http://localhost:3000
 
  ✓ Starting...
- ✓ Ready in 422ms
+ ✓ Ready in 1689ms
+ ○ Compiling /emails/new ...
+ ✓ Compiled /emails/new in 6.3s (604 modules)
+ ✓ Compiled in 717ms (291 modules)
+ GET /emails/new 200 in 7068ms

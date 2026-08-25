@@ -25,6 +25,16 @@ export default function ComposePage() {
     setMessage(null);
 
     try {
+      if (draft.smtpOptions) {
+        try {
+          JSON.parse(draft.smtpOptions);
+        } catch {
+          setMessage({ type: 'error', text: 'Invalid JSON in SMTP Options.' });
+          setLoading(false);
+          return;
+        }
+      }
+
       const response = await fetch('/api/send', {
         method: 'POST',
         headers: {
@@ -38,6 +48,8 @@ export default function ComposePage() {
             bcc: draft.bcc,
             subject: draft.subject,
             body: draft.body,
+            html: draft.html,
+            ...(draft.smtpOptions ? JSON.parse(draft.smtpOptions) : {}),
           }
         }),
       });
@@ -66,6 +78,15 @@ export default function ComposePage() {
     if (draft.scheduleType === 'now') {
       handleSendNow();
       return;
+    }
+
+    if (draft.smtpOptions) {
+      try {
+        JSON.parse(draft.smtpOptions);
+      } catch {
+        setMessage({ type: 'error', text: 'Invalid JSON in SMTP Options.' });
+        return;
+      }
     }
 
     if (!draft.scheduledDate || !draft.scheduledTime) {
@@ -161,6 +182,30 @@ export default function ComposePage() {
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
             ></textarea>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">HTML Body</label>
+            <textarea
+              name="html"
+              value={draft.html}
+              onChange={handleChange}
+              rows={4}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              placeholder="<h1>Optional HTML content</h1>"
+            ></textarea>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Advanced SMTP Options (JSON)</label>
+            <textarea
+              name="smtpOptions"
+              value={draft.smtpOptions}
+              onChange={handleChange}
+              rows={4}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border font-mono"
+              placeholder='{"headers": {"X-My-Header": "value"}, "attachments": [{"filename": "text.txt", "content": "Hello"}]}'
+            ></textarea>
+          </div>
+
         </div>
 
         <div className="mt-8 pt-6 border-t border-gray-200">

@@ -9,7 +9,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: 'Authentication details are required' }, { status: 400 });
     }
 
-    if (!message || !message.to || !message.subject || !message.body) {
+    if (!message || !message.to || !message.subject || (!message.body && !message.text && !message.html)) {
       return NextResponse.json({ success: false, error: 'Message details are incomplete' }, { status: 400 });
     }
 
@@ -23,12 +23,10 @@ export async function POST(req: Request) {
 
     const mailOptions = {
       from: auth.email,
-      to: message.to,
-      cc: message.cc,
-      bcc: message.bcc,
-      subject: message.subject,
-      text: message.body,
+      ...message,
+      text: message.text || message.body,
     };
+    delete mailOptions.body;
 
     const info = await transporter.sendMail(mailOptions);
 
